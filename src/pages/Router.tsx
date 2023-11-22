@@ -11,7 +11,12 @@ const generateRoute = (
     path: path,
     element: component,
     errorElement: <ErrorComponent />,
-    children: children
+    children: children,
+    loader: async () => {
+      const res = await fetch('/videos/popular.json')
+      const json = await res.json()
+      return json.items
+    }
   }
 }
 
