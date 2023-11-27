@@ -1,8 +1,16 @@
 export const Spinner = () => {
+  const currentTheme = localStorage.getItem('theme')
+
+  const spinnerStyle = {
+    margin: 'auto',
+    display: 'block',
+    background: Number(currentTheme) ? '#000' : '#fff'
+  }
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={{ margin: 'auto', background: '#fff', display: 'block' }}
+      style={spinnerStyle}
       width="200px"
       height="200px"
       viewBox="0 0 100 100"
@@ -40,7 +48,7 @@ export const Spinner = () => {
         strokeWidth="2.79"
         d="M18 36.895L81.99999999999999 36.895A13.104999999999999 13.104999999999999 0 0 1 95.10499999999999 50L95.10499999999999 50A13.104999999999999 13.104999999999999 0 0 1 81.99999999999999 63.105L18 63.105A13.104999999999999 13.104999999999999 0 0 1 4.895000000000003 50L4.895000000000003 50A13.104999999999999 13.104999999999999 0 0 1 18 36.895 Z"></path>
       <path
-        fill="#ff0000"
+        fill={Number(currentTheme) ? '#F41B3B' : '#1884f7'}
         clipPath="url(#progress-ozcmtia6k0e-cp)"
         d="M18 40.99L82 40.99A9.009999999999998 9.009999999999998 0 0 1 91.00999999999999 50L91.00999999999999 50A9.009999999999998 9.009999999999998 0 0 1 82 59.01L18 59.01A9.009999999999998 9.009999999999998 0 0 1 8.990000000000004 50L8.990000000000004 50A9.009999999999998 9.009999999999998 0 0 1 18 40.99 Z"></path>
     </svg>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   CommonFooter,
   CommonHeader,
@@ -19,7 +19,6 @@ export const MainPage = () => {
   })
 
   if (isLoading) return <Spinner />
-  console.log(Spinner)
 
   const preLoadData = isProduction ? mainQuery.items : useLoaderData()
 
