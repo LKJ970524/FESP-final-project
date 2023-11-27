@@ -1,8 +1,42 @@
-import { CommentsBox, DetailMainContent, DetailRelatedList } from '@components'
-import { CommonFooter, CommonHeader, CommonTopButton } from '@components/common'
-import { RelatedVideoItem, VideoItem } from '@types'
-import { useEffect, useLayoutEffect, useState } from 'react'
+import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { useLoaderData, useLocation, useParams } from 'react-router-dom'
+import { Spinner } from '@components'
+
+const DetailMainContent = React.lazy(() =>
+  import('@components/detail/DetailMainContent').then(module => ({
+    default: module.DetailMainContent
+  }))
+)
+
+const DetailRelatedList = React.lazy(() =>
+  import('@components/detail/DetailRelatedList').then(module => ({
+    default: module.DetailRelatedList
+  }))
+)
+
+const CommentsBox = React.lazy(() =>
+  import('@components/detail/CommentsBox').then(module => ({
+    default: module.CommentsBox
+  }))
+)
+
+const CommonHeader = React.lazy(() =>
+  import('@components/common/CommonHeader').then(module => ({
+    default: module.CommonHeader
+  }))
+)
+
+const CommonFooter = React.lazy(() =>
+  import('@components/common/CommonFooter').then(module => ({
+    default: module.CommonFooter
+  }))
+)
+
+const CommonTopButton = React.lazy(() =>
+  import('@components/common/CommonTopButton').then(module => ({
+    default: module.CommonTopButton
+  }))
+)
 
 export const DetailPage = () => {
   const param = useParams()
@@ -10,17 +44,14 @@ export const DetailPage = () => {
   const preLoadData: any = useLoaderData()
 
   const { state } = useLocation()
-  const [detailData, setDetailData] = useState<VideoItem | null>(null)
-  const [relatedData, setRelatedData] = useState<RelatedVideoItem[] | null>(
-    null
-  )
+  const [detailData, setDetailData] = useState(null)
+  const [relatedData, setRelatedData] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
       const filteredData = state
         ? state
-        : preLoadData.find((item: VideoItem) => item.id === id)
-
+        : preLoadData.find(item => item.id === id)
       setDetailData(filteredData)
 
       const relatedJson = await fetch(
@@ -36,16 +67,18 @@ export const DetailPage = () => {
   }, [id])
 
   return (
-    <>
-      <CommonHeader />
-      <DetailMainContent
-        detailData={detailData}
-        id={id}
-      />
-      <DetailRelatedList relatedData={relatedData} />
-      <CommentsBox videoId={id} />
-      <CommonFooter />
-      <CommonTopButton />
-    </>
+    <Suspense fallback={<Spinner />}>
+      <>
+        <CommonHeader />
+        <DetailMainContent
+          detailData={detailData}
+          id={id}
+        />
+        <DetailRelatedList relatedData={relatedData} />
+        <CommentsBox videoId={id} />
+        <CommonFooter />
+        <CommonTopButton />
+      </>
+    </Suspense>
   )
 }

@@ -1,4 +1,4 @@
-import { CommonHeader } from '@components'
+import { CommonHeader, Spinner } from '@components'
 import { IsNotSearched } from '@components/search'
 import {
   ContentCardDescription,
@@ -9,7 +9,7 @@ import {
   VideoIframe,
   VideoOverlay
 } from '@styles'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useLoaderData, useNavigate, useSearchParams } from 'react-router-dom'
 
 export const SearchPage = () => {
@@ -68,21 +68,25 @@ export const SearchPage = () => {
                   onMouseEnter={() => handleMouseEnter(i.id)}
                   onMouseLeave={handleMouseLeave}>
                   <ThumbnailBoxImg
+                    $height={+i.snippet.thumbnails.medium.height}
                     $image={i.snippet.thumbnails.standard.url}
-                    $height={+i.snippet.thumbnails.medium.height}>
+                    $isLoaded={hoveredVideoId === i.id}>
                     {hoveredVideoId === i.id && (
-                      <VideoOverlay className="video-overlay">
-                        <VideoIframe
-                          src={`https://www.youtube.com/embed/${
-                            i.id
-                          }?autoplay=${
-                            hoveredVideoId === i.id ? 1 : 0
-                          }&mute=1&controls=0`}
-                          title={i.snippet.title}
-                        />
-                      </VideoOverlay>
+                      <Suspense fallback={<Spinner />}>
+                        <VideoOverlay className="video-overlay">
+                          <VideoIframe
+                            src={`https://www.youtube.com/embed/${
+                              i.id
+                            }?autoplay=${
+                              hoveredVideoId === i.id ? 1 : 0
+                            }&mute=1&controls=0`}
+                            title={i.snippet.title}
+                          />
+                        </VideoOverlay>
+                      </Suspense>
                     )}
                   </ThumbnailBoxImg>
+
                   <ContentCardTitle onClick={() => moveToDetail(i.id)}>
                     {i.snippet.title}
                   </ContentCardTitle>

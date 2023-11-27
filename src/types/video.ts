@@ -75,4 +75,5 @@ export interface VideoListResponse {
 export interface ThumbnailImg {
   $image?: string
   $height?: number
+  $isLoaded?: boolean
 }
