@@ -1,8 +1,10 @@
+import React from 'react'
 import {
   CommonFooter,
   CommonHeader,
   MainContent,
-  MainThumbnail
+  MainThumbnail,
+  Spinner
 } from '@components'
 import { CommonTopButton } from '@common'
 import { useLoaderData } from 'react-router-dom'
@@ -16,17 +18,16 @@ export const MainPage = () => {
     queryFn: getMainData
   })
 
-  if (isLoading) return <div>로딩중</div>
+  if (isLoading) return <Spinner />
+  console.log(Spinner)
 
-  const preLoadData: any = isProduction ? mainQuery.items : useLoaderData()
+  const preLoadData = isProduction ? mainQuery.items : useLoaderData()
 
   return (
     <>
       <CommonHeader />
       <MainThumbnail preLoadData={preLoadData} />
-
       <MainContent preLoadData={preLoadData} />
-
       <CommonFooter />
       <CommonTopButton />
     </>
