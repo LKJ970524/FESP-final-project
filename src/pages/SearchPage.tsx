@@ -11,6 +11,7 @@ import {
 } from '@styles'
 import { useEffect, useState, Suspense } from 'react'
 import { useLoaderData, useNavigate, useSearchParams } from 'react-router-dom'
+import { LazyLoadComponent } from 'react-lazy-load-image-component'
 
 export const SearchPage = () => {
   const navigate = useNavigate()
@@ -67,26 +68,27 @@ export const SearchPage = () => {
                 <ContentCardWrapper
                   onMouseEnter={() => handleMouseEnter(i.id)}
                   onMouseLeave={handleMouseLeave}>
-                  <ThumbnailBoxImg
-                    $height={+i.snippet.thumbnails.medium.height}
-                    $image={i.snippet.thumbnails.standard.url}
-                    $isLoaded={hoveredVideoId === i.id}>
-                    {hoveredVideoId === i.id && (
-                      <Suspense fallback={<Spinner />}>
-                        <VideoOverlay className="video-overlay">
-                          <VideoIframe
-                            src={`https://www.youtube.com/embed/${
-                              i.id
-                            }?autoplay=${
-                              hoveredVideoId === i.id ? 1 : 0
-                            }&mute=1&controls=0`}
-                            title={i.snippet.title}
-                          />
-                        </VideoOverlay>
-                      </Suspense>
-                    )}
-                  </ThumbnailBoxImg>
-
+                  <LazyLoadComponent>
+                    <ThumbnailBoxImg
+                      $height={+i.snippet.thumbnails.medium.height}
+                      $image={i.snippet.thumbnails.standard.url}
+                      $isLoaded={hoveredVideoId === i.id}>
+                      {hoveredVideoId === i.id && (
+                        <Suspense fallback={<Spinner />}>
+                          <VideoOverlay className="video-overlay">
+                            <VideoIframe
+                              src={`https://www.youtube.com/embed/${
+                                i.id
+                              }?autoplay=${
+                                hoveredVideoId === i.id ? 1 : 0
+                              }&mute=1&controls=0`}
+                              title={i.snippet.title}
+                            />
+                          </VideoOverlay>
+                        </Suspense>
+                      )}
+                    </ThumbnailBoxImg>
+                  </LazyLoadComponent>
                   <ContentCardTitle onClick={() => moveToDetail(i.id)}>
                     {i.snippet.title}
                   </ContentCardTitle>
