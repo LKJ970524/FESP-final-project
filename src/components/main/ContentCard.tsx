@@ -9,6 +9,7 @@ import {
   VideoOverlay
 } from '@styles'
 import { VideoItem } from '@types'
+import { LazyLoadComponent } from 'react-lazy-load-image-component'
 
 export const ContentCard = ({ data }: { data: VideoItem }) => {
   const navigate = useNavigate()
@@ -30,26 +31,28 @@ export const ContentCard = ({ data }: { data: VideoItem }) => {
     <ContentCardWrapper
       onMouseEnter={() => handleMouseEnter(data.id)}
       onMouseLeave={handleMouseLeave}>
-      <ThumbnailBoxImg
-        $image={data.snippet.thumbnails.standard.url}
-        $height={+data.snippet.thumbnails.medium.height}>
-        {hoveredVideoId === data.id && (
-          <VideoOverlay className="video-overlay">
-            <VideoIframe
-              src={`https://www.youtube.com/embed/${data.id}?autoplay=${
-                hoveredVideoId === data.id ? 1 : 0
-              }&mute=1&controls=0`}
-              title={data.snippet.title}
-            />
-          </VideoOverlay>
-        )}
-      </ThumbnailBoxImg>
-      <ContentCardTitle onClick={() => handleClickItem(data.id)}>
-        {data.snippet.title}
-      </ContentCardTitle>
-      <ContentCardDescription onClick={() => handleClickItem(data.id)}>
-        {data.snippet.description}
-      </ContentCardDescription>
+      <LazyLoadComponent>
+        <ThumbnailBoxImg
+          $image={data.snippet.thumbnails.standard.url}
+          $height={+data.snippet.thumbnails.medium.height}>
+          {hoveredVideoId === data.id && (
+            <VideoOverlay className="video-overlay">
+              <VideoIframe
+                src={`https://www.youtube.com/embed/${data.id}?autoplay=${
+                  hoveredVideoId === data.id ? 1 : 0
+                }&mute=1&controls=0`}
+                title={data.snippet.title}
+              />
+            </VideoOverlay>
+          )}
+        </ThumbnailBoxImg>
+        <ContentCardTitle onClick={() => handleClickItem(data.id)}>
+          {data.snippet.title}
+        </ContentCardTitle>
+        <ContentCardDescription onClick={() => handleClickItem(data.id)}>
+          {data.snippet.description}
+        </ContentCardDescription>
+      </LazyLoadComponent>
     </ContentCardWrapper>
   )
 }

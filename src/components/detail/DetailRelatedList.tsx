@@ -2,6 +2,7 @@ import { useSwipe } from '@hooks'
 import { RelatedVideoItem } from '@types'
 import { formatTime } from '@utils'
 import { useEffect } from 'react'
+import { LazyLoadComponent } from 'react-lazy-load-image-component'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -36,32 +37,37 @@ export const DetailRelatedList = ({ relatedData }: DetailRelatedListProps) => {
   return (
     <RelatedWrap>
       <h2>Related Videos</h2>
-      <RelatedVideoList
-        ref={scrollRef}
-        onMouseDown={handleDragStart}
-        onMouseMove={handleDragMove}
-        onMouseUp={handleDragEnd}
-        onMouseLeave={handleDragEnd}>
-        {relatedData?.map(item => (
-          <li
-            key={item.etag}
-            onClick={() => {
-              if (!isDrag) {
-                handleClickItem(item)
-              }
-            }}>
-            <ThumbnailBoxImg $image={item.snippet.thumbnails.high.url}>
-              <ThumbnailBoxText>
-                <h4>{item.snippet.title}</h4>
-                <p>
-                  {item.snippet.channelTitle} •
-                  <time> {formatTime(item.snippet.publishedAt as string)}</time>
-                </p>
-              </ThumbnailBoxText>
-            </ThumbnailBoxImg>
-          </li>
-        ))}
-      </RelatedVideoList>
+      <LazyLoadComponent>
+        <RelatedVideoList
+          ref={scrollRef}
+          onMouseDown={handleDragStart}
+          onMouseMove={handleDragMove}
+          onMouseUp={handleDragEnd}
+          onMouseLeave={handleDragEnd}>
+          {relatedData?.map(item => (
+            <li
+              key={item.etag}
+              onClick={() => {
+                if (!isDrag) {
+                  handleClickItem(item)
+                }
+              }}>
+              <ThumbnailBoxImg $image={item.snippet.thumbnails.high.url}>
+                <ThumbnailBoxText>
+                  <h4>{item.snippet.title}</h4>
+                  <p>
+                    {item.snippet.channelTitle} •
+                    <time>
+                      {' '}
+                      {formatTime(item.snippet.publishedAt as string)}
+                    </time>
+                  </p>
+                </ThumbnailBoxText>
+              </ThumbnailBoxImg>
+            </li>
+          ))}
+        </RelatedVideoList>
+      </LazyLoadComponent>
     </RelatedWrap>
   )
 }
